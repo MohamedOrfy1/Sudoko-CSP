@@ -1,5 +1,5 @@
 from collections import deque
-from sudoku import Sudoku
+from app.core.sudoku import Sudoku
 
 def AC3(board : Sudoku):
     """AC-3 algorithm for arc consistency."""
