@@ -54,7 +54,7 @@ def create_puzzle(board, difficulty="easy"):
         "hard": 55,
         "extreme": 60
     }
-    num_to_remove = levels.get(difficulty, 35)
+    num_to_remove = levels.get(difficulty, 45)
 
     removed = 0
 
