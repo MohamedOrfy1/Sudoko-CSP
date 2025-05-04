@@ -1,7 +1,8 @@
 .sudoku-board {
-    display: block;
-    margin: 20px;
+    display: inline-block;
+    margin: 20px auto;
     border: 2px solid black;
+    background: #222;
 }
 
 .sudoku-row {
@@ -13,15 +14,24 @@
     height: 40px;
     text-align: center;
     font-size: 20px;
-    border: 1px solid #ccc;
     border: 1px solid #999;
     color: #fff;
+    background: #333;
+    outline: none;
 }
 
 .sudoku-cell:nth-child(3n) {
     border-right: 2px solid black;
 }
 
+.sudoku-cell:nth-child(1) {
+    border-left: 2px solid black;
+}
+
 .sudoku-row:nth-child(3n) .sudoku-cell {
     border-bottom: 2px solid black;
+}
+
+.sudoku-row:nth-child(1) .sudoku-cell {
+    border-top: 2px solid black;
 }
