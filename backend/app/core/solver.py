@@ -74,14 +74,12 @@ def backtrack(board : Sudoku):
 
     return False
 
-import time
 
 def solve_board(board: Sudoku):
     print("Applying AC-3 for preprocessing...")
     if not AC3(board):
         print("Unsolvable after AC-3.")
         return False
-    time.sleep(5)
     print("Applying backtracking search...")
     if backtrack(board):
         board.update_board_from_domains()
