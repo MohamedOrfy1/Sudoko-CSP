@@ -68,10 +68,13 @@ class Sudoku:
         return arcs
     
     def update_board_from_domains(self):
-        for (r, c), domain in self.domains.items():
-            if len(domain) == 1:
-                print(f"Updating cell ({r}, {c}) with value {domain[0]}")
-                self.board[r][c] = int(domain[0])
+        # for (r, c), domain in self.domains.items():
+        #     if len(domain) == 1:
+        #         self.board[r][c] = int(domain[0])
+        for var in self.variables:
+            if len(self.domains[var]) == 1:
+                r, c = var
+                self.board[r][c] = int(self.domains[var])
 
     def is_consistent(self, var, value):
         for neighbor in self.get_neighbors(var):
@@ -80,8 +83,34 @@ class Sudoku:
         return True
     
     def select_unassigned_variable(self):
+        # Select the variable with the smallest domain size
+        # Min Remaining Values (MRV) heuristic
         return min(
             (var for var in self.variables if len(self.domains[var]) > 1),
             key=lambda var: len(self.domains[var]),
             default=None
         )
+    
+    def order_domain_values(self, var):
+        """
+        Return the values in the domain of `var` ordered by the LCV heuristic.
+        Values that eliminate the fewest choices for neighbors come first.
+        """
+        # LCV (Least Constraining Value) heuristic
+        if len(self.domains[var]) == 1:
+            return self.domains[var]
+
+        neighbors = self.get_neighbors(var)
+        value_constraints = []
+
+        for value in self.domains[var]:
+            elimination_count = 0
+            for neighbor in neighbors:
+                if len(self.domains[neighbor]) > 1:
+                    if value in self.domains[neighbor]:
+                        elimination_count += 1
+            value_constraints.append((value, elimination_count))
+
+        # Sort values by the number of eliminations (least first)
+        sorted_values = sorted(value_constraints, key=lambda x: x[1])
+        return [val for val, _ in sorted_values]
