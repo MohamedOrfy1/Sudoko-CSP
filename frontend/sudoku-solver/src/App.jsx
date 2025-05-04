@@ -19,24 +19,33 @@ const exampleBoard = [
 
 function App() {
   const [board, setBoard] = useState(emptyBoard());
+  const [editable, setEditable] = useState(
+    Array.from({ length: 9 }, () => Array(9).fill(true))
+  );
+  
 
   function handleGenerate() {
     setBoard(exampleBoard);
+    setEditable(exampleBoard.map(row => row.map(cell => cell === 0)));
   };
 
   function handleClear() {
     setBoard(emptyBoard());
+    setEditable(Array.from({ length: 9 }, () => Array(9).fill(true)));
   };
 
   function handleInput() {
     const input = prompt('Enter the puzzle as a string (81 characters, 0 for empty cells):');
     if (input && input.length === 81) {
       const newBoard = [];
+      const newEditable = [];
       for (let i = 0; i < 9; i++) {
         const row = input.slice(i * 9, (i + 1) * 9).split('').map(Number);
         newBoard.push(row);
+        newEditable.push(row.map(cell => cell === 0));
       }
       setBoard(newBoard);
+      setEditable(newEditable);
     } else {
       alert('Invalid input. Please enter a string of 81 characters.');
     }
@@ -50,7 +59,7 @@ function App() {
     <>
       <h1>Sudoku Solver</h1>
       <Options onClear={handleClear} onGenerate={handleGenerate} OnInput={handleInput} />
-      <SudokuBoard board={board} setBoard={setBoard} />
+      <SudokuBoard board={board} setBoard={setBoard} editable={editable} />
       <button onClick={handleSolve}>Solve</button>
     </>
   )

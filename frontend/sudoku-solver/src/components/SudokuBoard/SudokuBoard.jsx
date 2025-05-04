@@ -1,7 +1,7 @@
 import React from 'react';
 import './SudokuBoard.css';
 
-const SudokuBoard = ({ board, setBoard }) => {
+const SudokuBoard = ({ board, setBoard, editable }) => {
 
     const handleChange = (row, col, value) => {
         const newValue = value === '' ? 0 : parseInt(value, 10);
@@ -24,7 +24,9 @@ const SudokuBoard = ({ board, setBoard }) => {
                                 className="sudoku-cell"
                                 type="text"
                                 value={cell === 0 ? '' : cell}
-                                onChange={(e) => handleChange(rowIndex, colIndex, e.target.value)}
+                                onChange={(e) => 
+                                    (editable[rowIndex][colIndex] &&
+                                    handleChange(rowIndex, colIndex, e.target.value))}
                                 maxLength={1}
                             />
                         ))}
