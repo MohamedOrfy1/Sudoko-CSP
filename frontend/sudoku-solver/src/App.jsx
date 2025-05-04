@@ -5,33 +5,37 @@ import Options from './components/Options/Options.jsx';
 
 const emptyBoard = () => Array.from({ length: 9 }, () => Array(9).fill(0));
 
-const exampleBoard = [
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 8, 0, 5],
-  [0, 0, 0, 0, 7, 1, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 7],
-  [0, 0, 5, 0, 9, 0, 0, 8, 1],
-  [0, 0, 7, 0, 0, 8, 5, 9, 3],
-  [0, 0, 8, 0, 2, 3, 0, 7, 0],
-  [0, 3, 9, 0, 0, 5, 0, 0, 0],
-  [0, 7, 1, 0, 6, 0, 0, 0, 4]
-]
-
 function App() {
   const [board, setBoard] = useState(emptyBoard());
   const [editable, setEditable] = useState(
     Array.from({ length: 9 }, () => Array(9).fill(true))
   );
   
+  const [error, setError] = useState(null);
+  const [isSolving, setIsSolving] = useState(false);
 
-  function handleGenerate() {
-    setBoard(exampleBoard);
-    setEditable(exampleBoard.map(row => row.map(cell => cell === 0)));
+  async function handleGenerate(difficulty) {
+    try {
+      setError(null);
+      const response = await fetch(`http://localhost:8000/api/generate?difficulty=${difficulty}`);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      setBoard(data.board);
+      setEditable(data.board.map(row => row.map(cell => cell === 0)));
+    } catch (error) {
+      setError('Failed to generate puzzle. Please try again.');
+      console.error('Error generating puzzle:', error);
+    }
   };
 
   function handleClear() {
     setBoard(emptyBoard());
     setEditable(Array.from({ length: 9 }, () => Array(9).fill(true)));
+    setError(null);
   };
 
   function handleInput() {
@@ -46,21 +50,63 @@ function App() {
       }
       setBoard(newBoard);
       setEditable(newEditable);
+      setError(null);
     } else {
-      alert('Invalid input. Please enter a string of 81 characters.');
+      setError('Invalid input. Please enter a string of 81 characters.');
     }
   }
 
-  function handleSolve() {
-    alert('Need to connect to the solver');
+  async function handleSolve() {
+    try {
+      setError(null);
+      setIsSolving(true);
+
+      const response = await fetch('http://localhost:8000/api/solve', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          board: board
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      
+      if (!data.solved) {
+        setError('The puzzle could not be solved. Please check your input.');
+        return;
+      }
+
+      setBoard(data.board);
+      setEditable(Array.from({ length: 9 }, () => Array(9).fill(false)));
+    } catch (error) {
+      setError('Failed to solve puzzle. Please try again.');
+      console.error('Error solving puzzle:', error);
+    } finally {
+      setIsSolving(false);
+    }
   };
 
   return (
     <>
       <h1>Sudoku Solver</h1>
       <Options onClear={handleClear} onGenerate={handleGenerate} OnInput={handleInput} />
-      <SudokuBoard board={board} setBoard={setBoard} editable={editable} />
-      <button onClick={handleSolve}>Solve</button>
+      {error && <div className="error">{error}</div>}
+      <div className="sudoku-container">
+        <SudokuBoard board={board} setBoard={setBoard} editable={editable} />
+        <button 
+          onClick={handleSolve} 
+          disabled={isSolving}
+          className={isSolving ? 'solving' : ''}
+        >
+          {isSolving ? 'Solving...' : 'Solve'}
+        </button>
+      </div>
     </>
   )
 }
