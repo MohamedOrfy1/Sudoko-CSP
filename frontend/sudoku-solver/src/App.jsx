@@ -21,7 +21,7 @@ function App() {
   const [board, setBoard] = useState(emptyBoard());
 
   function handleGenerate() {
-    setBoard(samplePuzzle);
+    setBoard(exampleBoard);
   };
 
   function handleClear() {
