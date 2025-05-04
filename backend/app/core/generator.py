@@ -49,9 +49,10 @@ def generate_full_board():
 def create_puzzle(board, difficulty="easy"):
     # Removes numbers from solved board to create puzzle
     levels = {
-        "easy": 43,
-        "medium": 51,
-        "hard": 55
+        "easy": 45,
+        "medium": 50,
+        "hard": 55,
+        "extreme": 60
     }
     num_to_remove = levels.get(difficulty, 35)
 
@@ -101,7 +102,7 @@ def generate_puzzle(difficulty="easy"):
 
 if __name__ == "__main__":
     # Example usage
-    difficulty = "hard"  # Change to "easy", "medium", or "hard"
+    difficulty = "hard"  # Change to "easy", "medium", or "hard" or "extreme"
     puzzle = generate_puzzle(difficulty)
     print("Generated Puzzle:")
     sudoku = Sudoku(board=puzzle)
