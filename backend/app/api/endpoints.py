@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException
 from app.models.schemas import SudokuBoard, SudokuSolution
 from app.core.solver import solve_board
 from app.core.sudoku import Sudoku
+from app.core.generator import generate_puzzle
 
 router = APIRouter(prefix="/api", tags=["sudoku"])
 
@@ -33,3 +34,26 @@ async def solve_sudoku(board: SudokuBoard):
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error solving Sudoku: {str(e)}")
+
+@router.get("/generate", response_model=SudokuBoard)
+async def generate_sudoku(difficulty: str = "easy"):
+    """
+    Generate a new Sudoku puzzle.
+    
+    Args:
+        difficulty (str): The difficulty level of the puzzle. Can be "easy", "medium", "hard", or "extreme".
+                         Defaults to "easy".
+    
+    Returns a 9x9 grid where:
+    - 0 represents an empty cell
+    - 1-9 represent filled cells
+    """
+    try:
+        # Generate a new puzzle with specified difficulty
+        puzzle = generate_puzzle(difficulty)
+        
+        return {
+            "board": puzzle
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error generating Sudoku: {str(e)}")
