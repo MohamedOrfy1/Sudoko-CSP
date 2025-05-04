@@ -1,10 +1,11 @@
 class Sudoku:
-    def __init__(self, board):
+    def __init__(self, board, debug=False):
         """
         Initialize the Sudoku puzzle.
         board: a 9x9 list of lists with integers (0 means empty).
         """
         self.board = board
+        self.debug = debug
         self.size = 9
         self.box_size = 3
         self.variables = self.__initialize_variables()
