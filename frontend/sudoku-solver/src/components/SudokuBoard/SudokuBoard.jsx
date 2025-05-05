@@ -1,16 +1,27 @@
 import React from 'react';
 import './SudokuBoard.css';
 
-const SudokuBoard = ({ board, setBoard, editable }) => {
+const SudokuBoard = ({ board, setBoard, editable, solution }) => {
 
     const handleChange = (row, col, value) => {
         const newValue = value === '' ? 0 : parseInt(value, 10);
         if (isNaN(newValue) || newValue < 0 || newValue > 9) {
             return;
         }
-        const newBoard = board.map((row) => [...row]);
+        const newBoard = [...board];
         newBoard[row][col] = newValue;
         setBoard(newBoard);
+    };
+
+    const getCellClass = (row, col) => {
+        if (!editable[row][col]) return 'fixed';
+
+        const userValue = board[row][col];
+        const correctValue = solution?.[row]?.[col];
+
+        if (userValue === 0) return 'editable';
+        if (userValue === correctValue) return 'correct';
+        return 'incorrect';
     };
 
     return (
@@ -21,7 +32,7 @@ const SudokuBoard = ({ board, setBoard, editable }) => {
                         {row.map((cell, colIndex) => (
                             <input
                                 key={`${rowIndex}-${colIndex}`}
-                                className="sudoku-cell"
+                                className={`sudoku-cell ${getCellClass(rowIndex, colIndex)}`}
                                 type="text"
                                 value={cell === 0 ? '' : cell}
                                 onChange={(e) => 

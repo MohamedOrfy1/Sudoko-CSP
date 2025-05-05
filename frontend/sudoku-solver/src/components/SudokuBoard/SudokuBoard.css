@@ -20,6 +20,23 @@
     outline: none;
 }
 
+.editable {
+    color: #e7faff;
+}
+
+.fixed {
+    color: #f0f0f0;
+    font-weight: bold;
+}
+
+.correct {
+    color: #4caf50;
+}
+
+.incorrect {
+    color: #f44336;
+}
+
 .sudoku-cell:nth-child(3n) {
     border-right: 2px solid black;
 }
