@@ -94,23 +94,23 @@ def generate_puzzle(difficulty="easy"):
     # Fill few random cells using backtracking algorithm
     # Ensure that the puzzle is solvable
     full = generate_full_board()
-    
+    solution = copy.deepcopy(full)
     puzzle = create_puzzle(full, difficulty)
-    return puzzle
+    return puzzle, solution
 
 
 
-if __name__ == "__main__":
-    # Example usage
-    difficulty = "hard"  # Change to "easy", "medium", or "hard" or "extreme"
-    puzzle = generate_puzzle(difficulty)
-    print("Generated Puzzle:")
-    sudoku = Sudoku(board=puzzle)
-    sudoku.print_board()
-    print("Solving the puzzle...")
-    if solve_board(sudoku):
-        print("Solved Puzzle:")
-        sudoku.print_board()
-    else:
-        print("No solution found.")
+# if __name__ == "__main__":
+#     # Example usage
+#     difficulty = "hard"  # Change to "easy", "medium", or "hard" or "extreme"
+#     puzzle = generate_puzzle(difficulty)
+#     print("Generated Puzzle:")
+#     sudoku = Sudoku(board=puzzle)
+#     sudoku.print_board()
+#     print("Solving the puzzle...")
+#     if solve_board(sudoku):
+#         print("Solved Puzzle:")
+#         sudoku.print_board()
+#     else:
+#         print("No solution found.")
     

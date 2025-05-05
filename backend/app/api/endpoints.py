@@ -50,10 +50,11 @@ async def generate_sudoku(difficulty: str = "easy"):
     """
     try:
         # Generate a new puzzle with specified difficulty
-        puzzle = generate_puzzle(difficulty)
+        puzzle, full = generate_puzzle(difficulty)
         
         return {
-            "board": puzzle
+            "board": puzzle,
+            "full_board": full
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error generating Sudoku: {str(e)}")

@@ -1,8 +1,9 @@
 from pydantic import BaseModel, Field, validator
-from typing import List
+from typing import List, Optional
 
 class SudokuBoard(BaseModel):
     board: List[List[int]] = Field(..., description="9x9 Sudoku board with 0s for empty cells")
+    full_board: Optional[List[List[int]]] = Field(None, description="Full 9x9 Sudoku board with all cells filled")
     
     @validator('board')
     def validate_board(cls, board):
