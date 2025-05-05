@@ -112,7 +112,7 @@ function App() {
             <Options onClear={handleClear} onGenerate={handleGenerate} OnInput={handleInput} />
             {error && <div className="error">{error}</div>}
             <div className="sudoku-container">
-                <SudokuBoard board={board} setBoard={setBoard} editable={editable} solution={solution} />
+                <SudokuBoard board={board} setBoard={setBoard} editable={editable} setEditable={setEditable} solution={solution} />
                 <button
                     onClick={handleSolve}
                     disabled={isSolving}

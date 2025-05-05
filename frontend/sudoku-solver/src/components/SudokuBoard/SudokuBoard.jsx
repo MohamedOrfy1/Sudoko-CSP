@@ -1,7 +1,7 @@
 import React from 'react';
 import './SudokuBoard.css';
 
-const SudokuBoard = ({ board, setBoard, editable, solution }) => {
+const SudokuBoard = ({ board, setBoard, editable, setEditable, solution }) => {
 
     const handleChange = (row, col, value) => {
         const newValue = value === '' ? 0 : parseInt(value, 10);
@@ -11,11 +11,16 @@ const SudokuBoard = ({ board, setBoard, editable, solution }) => {
         const newBoard = [...board];
         newBoard[row][col] = newValue;
         setBoard(newBoard);
+        if (solution === null) {
+            const newEditable = [...editable];
+            newEditable[row][col] = newValue === 0;
+            setEditable(newEditable);
+        }
     };
 
     const getCellClass = (row, col) => {
         if (!editable[row][col]) return 'fixed';
-
+        if (editable[row][col] && solution === null) return 'fixed';
         const userValue = board[row][col];
         const correctValue = solution?.[row]?.[col];
 
